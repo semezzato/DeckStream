@@ -1,0 +1,6 @@
+{
+  "name": "DeckStream OBS",
+  "description": "Controle touch estilo Stream Deck para OBS Studio no Android e painel web gerencial com suporte a WebSocket v5, cenas, mixer de áudio e soundboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

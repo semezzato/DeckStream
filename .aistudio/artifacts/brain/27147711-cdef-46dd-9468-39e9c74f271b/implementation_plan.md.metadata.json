@@ -1,0 +1,6 @@
+{
+  "summary": "Plano de implementação detalhado para:\n1. Navbar com dock arredondado e efeito de vidro fosco (frosted glass), substituindo os textos ('Deck', 'Mixer', 'Soundboard', 'Ajustes') por ícones elegantes e intuitivos com tooltips e indicadores táteis.\n2. Central de Conexão Plug-and-Play com varredura automática de portas (4455, 4444, etc.), detecção automática de conexão USB (ADB reverse) e Wi-Fi LAN, reconexão transparente e fallback instantâneo.",
+  "updatedAt": "2026-10-20T02:54:08.721944365Z",
+  "requestFeedback": true,
+  "userFacing": true
+}
