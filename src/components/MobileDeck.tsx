@@ -12,37 +12,25 @@ import { ButtonEditModal } from './ButtonEditModal';
 import { QuickVolumeModal } from './QuickVolumeModal';
 import { IconRenderer } from './IconRenderer';
 import {
-  Edit2,
-  Check,
   Plus,
-  ChevronLeft,
-  ChevronRight,
-  Radio,
-  Disc,
-  Maximize2,
-  Minimize2,
 } from 'lucide-react';
 
 interface MobileDeckProps {
   onTriggerHaptic: (pattern?: number) => void;
-  isFullscreen?: boolean;
-  onToggleFullscreen?: () => void;
+  isEditMode: boolean;
 }
 
 export const MobileDeck: React.FC<MobileDeckProps> = ({
   onTriggerHaptic,
-  isFullscreen,
-  onToggleFullscreen,
+  isEditMode,
 }) => {
   const {
     streamState,
     gridConfig,
     buttons,
-    setCurrentPage,
     reorderButtons,
   } = useOBS();
 
-  const [isEditMode, setIsEditMode] = useState(false);
   const [editingButton, setEditingButton] = useState<DeckButton | null>(null);
   const [volumeModalInput, setVolumeModalInput] = useState<string | null>(null);
 
@@ -209,106 +197,7 @@ export const MobileDeck: React.FC<MobileDeckProps> = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden bg-zinc-50 dark:bg-[#07080c] p-2 md:p-3 gap-2 transition-colors select-none">
-      {/* Telemetry Bar */}
-      <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-white/[0.03] border border-zinc-200 dark:border-white/[0.05] shadow-xs shrink-0 text-xs text-zinc-900 dark:text-zinc-100">
-        {/* Active Scene */}
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-          <span className="text-zinc-400 text-[11px] uppercase tracking-wider shrink-0 font-medium">Cena:</span>
-          <span className="font-semibold text-zinc-900 dark:text-white truncate text-xs">
-            {streamState.currentProgramScene || 'Nenhuma'}
-          </span>
-        </div>
-
-        {/* Live & Rec Telemetry */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="flex items-center gap-1.5 text-[11px] font-mono">
-            <Radio className={`w-3 h-3 ${streamState.isStreaming ? 'text-rose-500 animate-pulse' : 'text-zinc-400'}`} />
-            <span className={streamState.isStreaming ? 'text-rose-600 dark:text-rose-400 font-bold' : 'text-zinc-400'}>
-              {streamState.isStreaming ? 'AO VIVO' : 'OFFLINE'}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-[11px] font-mono">
-            <Disc className={`w-3 h-3 ${streamState.isRecording ? 'text-purple-500' : 'text-zinc-400'}`} />
-            <span className={streamState.isRecording ? 'text-purple-600 dark:text-purple-300 font-bold' : 'text-zinc-400'}>
-              {streamState.isRecording ? 'GRAVANDO' : 'GRAVAÇÃO'}
-            </span>
-          </div>
-
-          {/* Page Switcher */}
-          <div className="flex items-center gap-1 pl-2 border-l border-zinc-200 dark:border-white/[0.08]">
-            <button
-              onClick={() => setCurrentPage(Math.max(1, gridConfig.currentPage - 1))}
-              disabled={gridConfig.currentPage === 1}
-              className="p-1 rounded hover:bg-zinc-100 dark:hover:bg-white/[0.08] disabled:opacity-20 text-zinc-500 dark:text-zinc-400 cursor-pointer"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            <span className="text-[11px] font-mono tabular-nums text-zinc-700 dark:text-zinc-300">
-              {gridConfig.currentPage}/{gridConfig.totalPages}
-            </span>
-            <button
-              onClick={() => setCurrentPage(Math.min(gridConfig.totalPages, gridConfig.currentPage + 1))}
-              disabled={gridConfig.currentPage === gridConfig.totalPages}
-              className="p-1 rounded hover:bg-zinc-100 dark:hover:bg-white/[0.08] disabled:opacity-20 text-zinc-500 dark:text-zinc-400 cursor-pointer"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Fullscreen Immersive Mode Toggle */}
-          {onToggleFullscreen && (
-            <button
-              type="button"
-              onClick={onToggleFullscreen}
-              className={`p-1 px-2 rounded text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-                isFullscreen
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.06]'
-              }`}
-              title="Modo Tela Cheia Imersivo para Celular"
-            >
-              {isFullscreen ? (
-                <>
-                  <Minimize2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Normal</span>
-                </>
-              ) : (
-                <>
-                  <Maximize2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Imersivo</span>
-                </>
-              )}
-            </button>
-          )}
-
-          {/* Edit / Reorganize Toggle */}
-          <button
-            onClick={() => setIsEditMode(!isEditMode)}
-            className={`p-1 px-2.5 rounded text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1 ${
-              isEditMode
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
-                : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.06]'
-            }`}
-            title="Organizar e editar botões"
-          >
-            {isEditMode ? (
-              <>
-                <Check className="w-3 h-3" />
-                <span>Pronto</span>
-              </>
-            ) : (
-              <>
-                <Edit2 className="w-3 h-3" />
-                <span>Organizar</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-
+    <div className="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden bg-zinc-50 dark:bg-[#07080c] p-2 md:p-3 transition-colors select-none">
       {/* Main Grid Viewport with Support for Spans (1x1, 2x1, 1x2, 2x2) and Explicit Coordinate Placement */}
       <div
         ref={gridRef}

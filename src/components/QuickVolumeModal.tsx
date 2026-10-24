@@ -82,12 +82,12 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150 select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150"
       onClick={e => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-sm bg-white dark:bg-[#11131a] border border-zinc-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden p-5 space-y-5 text-zinc-900 dark:text-zinc-100 transition-all">
+      <div role="dialog" aria-modal="true" aria-labelledby="quick-volume-title" className="my-auto w-full max-w-sm max-h-[calc(100dvh-1.5rem)] overflow-y-auto bg-white dark:bg-[#11131a] border border-zinc-200 dark:border-white/10 rounded-2xl shadow-2xl p-4 sm:p-5 space-y-5 text-zinc-900 dark:text-zinc-100 transition-all">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -95,7 +95,7 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
               {getInputIcon()}
             </div>
             <div className="min-w-0">
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-white truncate">
+              <h3 id="quick-volume-title" className="text-sm font-bold text-zinc-900 dark:text-white truncate">
                 {inputName}
               </h3>
               <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
@@ -106,7 +106,8 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+            aria-label="Fechar ajuste de volume"
+            className="w-11 h-11 shrink-0 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -129,15 +130,17 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
 
         {/* Main Touch Slider */}
         <div className="space-y-2">
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            value={volumePercent}
-            onChange={handleSliderChange}
-            className="w-full h-3 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
-          />
+          <div className="flex h-11 items-center">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={1}
+              value={volumePercent}
+              onChange={handleSliderChange}
+              className="w-full h-3 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+            />
+          </div>
           <div className="flex justify-between text-[10px] font-mono text-zinc-400 px-1">
             <span>0% (-inf)</span>
             <span>50% (-6 dB)</span>
@@ -156,7 +159,7 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
                 key={pct}
                 type="button"
                 onClick={() => handlePreset(pct)}
-                className={`py-1.5 rounded-lg text-xs font-semibold font-mono border transition-all ${
+                className={`min-h-11 rounded-lg text-xs font-semibold font-mono border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   volumePercent === pct
                     ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm'
                     : 'bg-zinc-100 dark:bg-white/[0.04] text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-white/10 hover:bg-zinc-200 dark:hover:bg-white/10'
@@ -173,7 +176,7 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
           <button
             type="button"
             onClick={handleToggleMute}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-xs transition-colors border ${
+            className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-4 font-semibold text-xs transition-colors border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               isMuted
                 ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20'
                 : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
@@ -195,7 +198,7 @@ export const QuickVolumeModal: React.FC<QuickVolumeModalProps> = ({
           <button
             type="button"
             onClick={() => handlePreset(100)}
-            className="py-2.5 px-3 rounded-xl font-medium text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/10 flex items-center gap-1.5 transition-colors"
+            className="flex min-h-11 items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-100 px-3 text-xs font-medium text-zinc-600 transition-colors hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.05] dark:text-zinc-400 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             title="Resetar para 100% (0 dB)"
           >
             <RotateCcw className="w-3.5 h-3.5" />

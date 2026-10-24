@@ -122,7 +122,7 @@ export const SoundboardView: React.FC = () => {
           <button
             key={cat.id}
             onClick={() => setFilterCategory(cat.id)}
-            className={`px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+            className={`min-h-11 rounded-md px-3 text-xs font-medium transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               filterCategory === cat.id
                 ? 'bg-purple-600 text-white font-bold'
                 : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'

@@ -3,7 +3,7 @@
  * Supports Dark, Light, and System (Android auto-sync) modes with HTML class management.
  */
 
-import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { ThemeMode } from '../types';
 
 interface ThemeContextValue {
@@ -50,20 +50,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     themeMode === 'system' ? (systemIsDark ? 'dark' : 'light') : themeMode;
 
   // Apply to documentElement
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
-    if (actualTheme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
+    root.classList.toggle('dark', actualTheme === 'dark');
+    root.classList.toggle('light', actualTheme === 'light');
 
     // Update meta theme-color for Android status bar
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', actualTheme === 'dark' ? '#090a0f' : '#f8fafc');
+      metaThemeColor.setAttribute('content', actualTheme === 'dark' ? '#07080c' : '#fafafa');
     }
   }, [actualTheme]);
 
