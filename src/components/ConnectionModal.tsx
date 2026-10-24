@@ -140,29 +140,29 @@ export const ConnectionModal: React.FC<ConnectionModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-100">
-      <div className="w-full max-w-xl bg-white dark:bg-[#0c0f17] border border-zinc-200 dark:border-white/[0.08] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-3 md:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-100">
+      <div role="dialog" aria-modal="true" aria-labelledby="connection-modal-title" className="my-auto flex max-h-[calc(100dvh-1.5rem)] min-h-0 w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl dark:border-white/[0.08] dark:bg-[#0c0f17]">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-200 dark:border-white/[0.06] bg-zinc-50 dark:bg-black/25">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 border-b border-zinc-200 bg-zinc-50 px-3 py-2.5 dark:border-white/[0.06] dark:bg-black/25 sm:px-5 sm:py-3.5">
+          <div className="flex min-w-0 items-center gap-2">
             <div className="p-1.5 rounded-xl bg-blue-500/10 text-blue-500">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-zinc-950 dark:text-white">Central Plug & Play OBS</h2>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Detecção Automática de Portas USB & Wi-Fi</p>
+              <h2 id="connection-modal-title" className="text-xs font-bold text-zinc-950 dark:text-white sm:text-sm">Central Plug & Play OBS</h2>
+              <p className="hidden text-[11px] text-zinc-500 dark:text-zinc-400 sm:block">Detecção Automática de Portas USB & Wi-Fi</p>
             </div>
           </div>
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/[0.05] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-5 overflow-y-auto space-y-4">
+        <div className="min-h-0 overflow-y-auto p-4 sm:p-5 space-y-4">
           {/* 3-POINT VISUAL TOPOLOGY DIAGRAM */}
           <div className="p-3.5 rounded-2xl bg-zinc-100/80 dark:bg-black/40 border border-zinc-200 dark:border-white/[0.06] space-y-3">
             <div className="flex items-center justify-between">
@@ -233,11 +233,12 @@ export const ConnectionModal: React.FC<ConnectionModalProps> = ({ isOpen, onClos
           {/* Quick Connection Mode Selector */}
           <div className="space-y-1.5">
             <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">Selecione o Método:</span>
-            <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2">
               <button
                 type="button"
                 onClick={() => setActiveMode('auto')}
-                className={`p-2 rounded-2xl border text-xs font-medium flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                aria-pressed={activeMode === 'auto'}
+                className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl border p-2 text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeMode === 'auto'
                     ? 'bg-cyan-50 dark:bg-cyan-950/30 border-cyan-500 text-cyan-700 dark:text-cyan-300 shadow-md shadow-cyan-500/10'
                     : 'bg-zinc-100/90 dark:bg-white/[0.03] border-zinc-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300'
@@ -251,7 +252,8 @@ export const ConnectionModal: React.FC<ConnectionModalProps> = ({ isOpen, onClos
               <button
                 type="button"
                 onClick={() => setActiveMode('usb')}
-                className={`p-2 rounded-2xl border text-xs font-medium flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                aria-pressed={activeMode === 'usb'}
+                className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl border p-2 text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeMode === 'usb'
                     ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 text-emerald-700 dark:text-emerald-300 shadow-md shadow-emerald-500/10'
                     : 'bg-zinc-100/90 dark:bg-white/[0.03] border-zinc-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300'
@@ -265,7 +267,8 @@ export const ConnectionModal: React.FC<ConnectionModalProps> = ({ isOpen, onClos
               <button
                 type="button"
                 onClick={() => setActiveMode('wifi')}
-                className={`p-2 rounded-2xl border text-xs font-medium flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                aria-pressed={activeMode === 'wifi'}
+                className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl border p-2 text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeMode === 'wifi'
                     ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-500 text-blue-700 dark:text-blue-300 shadow-md shadow-blue-500/10'
                     : 'bg-zinc-100/90 dark:bg-white/[0.03] border-zinc-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300'
@@ -279,7 +282,8 @@ export const ConnectionModal: React.FC<ConnectionModalProps> = ({ isOpen, onClos
               <button
                 type="button"
                 onClick={() => setActiveMode('simulator')}
-                className={`p-2 rounded-2xl border text-xs font-medium flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                aria-pressed={activeMode === 'simulator'}
+                className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-2xl border p-2 text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeMode === 'simulator'
                     ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-500 text-amber-700 dark:text-amber-300 shadow-md shadow-amber-500/10'
                     : 'bg-zinc-100/90 dark:bg-white/[0.03] border-zinc-200 dark:border-white/[0.06] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300'

@@ -1,16 +1,35 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
     --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --page-bg: #fafafa;
+    --page-fg: #18181b;
+    --scrollbar-thumb: rgba(24, 24, 27, 0.2);
+    --scrollbar-thumb-hover: rgba(24, 24, 27, 0.35);
+    color-scheme: light;
+  }
+
+  :root.dark {
+    --page-bg: #07080c;
+    --page-fg: #f1f5f9;
+    --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+    color-scheme: dark;
   }
 
   body {
     font-family: var(--font-sans);
-    user-select: none;
-    -webkit-user-select: none;
+    background-color: var(--page-bg);
+    color: var(--page-fg);
     touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 }
 
@@ -23,14 +42,112 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--scrollbar-thumb);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* Range sliders: ensure smooth touch */
 input[type="range"] {
   touch-action: pan-x;
+}
+
+.mixer-channel-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+}
+
+input.mixer-uiverse-fader {
+  appearance: none;
+  direction: rtl;
+  background: transparent;
+  writing-mode: vertical-lr;
+  touch-action: none;
+}
+
+input.mixer-uiverse-fader::-webkit-slider-runnable-track {
+  width: 50px;
+  height: 100%;
+  border-radius: 9px;
+  background: linear-gradient(
+    to top,
+    #f4f4f5 0 var(--volume-level),
+    #52525b var(--volume-level) 100%
+  );
+}
+
+input.mixer-uiverse-fader::-webkit-slider-thumb {
+  width: 0;
+  height: 0;
+  margin-top: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+}
+
+input.mixer-uiverse-fader::-moz-range-track {
+  width: 50px;
+  border-radius: 9px;
+  background: #52525b;
+}
+
+input.mixer-uiverse-fader::-moz-range-progress {
+  border-radius: 9999px;
+  background: #f4f4f5;
+}
+
+input.mixer-uiverse-fader::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Keep the top bar compact when a phone is held in landscape orientation. */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 480px) {
+  .app-header {
+    display: flex;
+    height: 3.5rem;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .app-header nav {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .app-header nav button {
+    flex: 0 1 auto;
+    min-height: 2.75rem;
+    padding-inline: 0.5rem;
+  }
+
+  .app-header .connection-label {
+    display: none;
+  }
+
+  .app-header .stream-state-label {
+    display: none;
+  }
+}
+
+@media (max-width: 359px) {
+  .app-header .stream-state-label {
+    display: none;
+  }
+
+  .app-header .connection-label {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 480px) and (max-width: 560px) {
+  .app-header nav button span {
+    display: none;
+  }
 }

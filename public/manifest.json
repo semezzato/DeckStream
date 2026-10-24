@@ -1,14 +1,14 @@
 {
-  "id": "/",
+  "id": "/app",
   "name": "DeckStream OBS Controller",
   "short_name": "DeckStream",
-  "description": "Controle touch estilo Stream Deck para OBS Studio no Android com suporte a cenas, mixer de áudio e soundboard.",
-  "start_url": "/",
+  "description": "Use o celular como painel touch para controlar cenas, áudio e efeitos no OBS Studio.",
+  "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0b0f17",
-  "theme_color": "#0b0f17",
+  "background_color": "#07080c",
+  "theme_color": "#07080c",
   "icons": [
     {
       "src": "/icon.svg",

@@ -1,14 +1,36 @@
 <!doctype html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>DeckStream OBS</title>
-    <meta name="description" content="Controle touch estilo Stream Deck para OBS Studio no Android e painel web gerencial com suporte a WebSocket v5, cenas, mixer de áudio e soundboard." />
-    <meta property="og:title" content="DeckStream OBS" />
-    <meta property="og:description" content="Controle touch estilo Stream Deck para OBS Studio no Android e painel web gerencial com suporte a WebSocket v5, cenas, mixer de áudio e soundboard." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>DeckStream — Controle o OBS pelo celular</title>
+    <meta name="description" content="Use o celular como painel touch para trocar cenas, controlar o áudio e disparar efeitos no OBS Studio." />
+    <meta property="og:title" content="DeckStream — Controle o OBS pelo celular" />
+    <meta property="og:description" content="Use o celular como painel touch para trocar cenas, controlar o áudio e disparar efeitos no OBS Studio." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0b0f17" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#07080c" />
+    <script>
+      (() => {
+        const storageKey = 'deckstream_theme_mode';
+        const validModes = ['dark', 'light', 'system'];
+        let mode = 'dark';
+
+        try {
+          const savedMode = localStorage.getItem(storageKey);
+          if (validModes.includes(savedMode)) mode = savedMode;
+        } catch {}
+
+        const followsDarkPreference = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
+        const isDark = mode === 'system' ? followsDarkPreference : mode === 'dark';
+        const root = document.documentElement;
+
+        root.classList.toggle('dark', isDark);
+        root.classList.toggle('light', !isDark);
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#07080c' : '#fafafa');
+      })();
+    </script>
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -19,7 +41,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-[#0b0f17] text-slate-100 antialiased selection:bg-blue-600 selection:text-white overflow-x-hidden">
+  <body class="antialiased selection:bg-blue-600 selection:text-white overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

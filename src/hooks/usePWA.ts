@@ -128,6 +128,7 @@ export function usePWA() {
     isInstalled,
     isIOS,
     install,
+    isWakeLockSupported: typeof navigator !== 'undefined' && 'wakeLock' in navigator,
     isWakeLockActive,
     toggleWakeLock,
     isFullscreen,

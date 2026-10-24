@@ -13,10 +13,15 @@ import { SoundboardView } from './components/SoundboardView';
 import { GridConfigView } from './components/GridConfigView';
 import { ConnectionModal } from './components/ConnectionModal';
 import { usePWA } from './hooks/usePWA';
+import { LandingPage } from './components/LandingPage';
+import { PrivacyPage } from './components/PrivacyPage';
 
 const MainContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('deck');
-  const [isConnectionModalOpen, setIsConnectionModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isConnectionModalOpen, setIsConnectionModalOpen] = useState(() =>
+    new URLSearchParams(window.location.search).get('connect') === '1'
+  );
 
   const {
     isInstallable,
@@ -24,38 +29,48 @@ const MainContent: React.FC = () => {
     isFullscreen,
     toggleFullscreen,
     isWakeLockActive,
+    isWakeLockSupported,
     toggleWakeLock,
     triggerHaptic,
   } = usePWA();
 
+  const handleTabChange = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    if (tab !== 'deck') setIsEditMode(false);
+  };
+
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-zinc-50 dark:bg-[#07080c] text-zinc-900 dark:text-slate-100 select-none transition-colors">
-      {/* 3-Zone Top Navigation Contract with Theme and Profile controls */}
+    <div className="relative flex h-dvh w-full flex-col overflow-hidden bg-zinc-50 text-zinc-900 transition-colors dark:bg-[#07080c] dark:text-slate-100">
+      {/* Header keeps global identity and the OBS connection status. */}
       <HeaderNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         onOpenConnectionModal={() => setIsConnectionModalOpen(true)}
         isInstallable={isInstallable}
         onInstall={install}
         isFullscreen={isFullscreen}
         onToggleFullscreen={toggleFullscreen}
-        isWakeLockActive={isWakeLockActive}
-        onToggleWakeLock={toggleWakeLock}
+        isEditMode={isEditMode}
+        onToggleEditMode={() => setIsEditMode(mode => !mode)}
       />
 
       {/* Main Tab Panels */}
-      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {activeTab === 'deck' && (
           <MobileDeck
             onTriggerHaptic={triggerHaptic}
-            isFullscreen={isFullscreen}
-            onToggleFullscreen={toggleFullscreen}
+            isEditMode={isEditMode}
           />
         )}
         {activeTab === 'mixer' && <AudioMixer />}
         {activeTab === 'soundboard' && <SoundboardView />}
         {activeTab === 'config' && (
-          <GridConfigView onOpenConnectionModal={() => setIsConnectionModalOpen(true)} />
+          <GridConfigView
+            onOpenConnectionModal={() => setIsConnectionModalOpen(true)}
+            isWakeLockActive={isWakeLockActive}
+            isWakeLockSupported={isWakeLockSupported}
+            onToggleWakeLock={toggleWakeLock}
+          />
         )}
       </main>
 
@@ -69,6 +84,10 @@ const MainContent: React.FC = () => {
 };
 
 export default function App() {
+  const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+  if (currentPath === '/privacidade') return <PrivacyPage />;
+  if (currentPath !== '/app') return <LandingPage />;
+
   return (
     <ThemeProvider>
       <OBSProvider>

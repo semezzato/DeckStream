@@ -18,13 +18,22 @@ import {
   Laptop,
   Check,
   Sparkles,
+  Monitor,
 } from 'lucide-react';
 
 interface GridConfigViewProps {
   onOpenConnectionModal: () => void;
+  isWakeLockActive: boolean;
+  isWakeLockSupported: boolean;
+  onToggleWakeLock: () => void;
 }
 
-export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnectionModal }) => {
+export const GridConfigView: React.FC<GridConfigViewProps> = ({
+  onOpenConnectionModal,
+  isWakeLockActive,
+  isWakeLockSupported,
+  onToggleWakeLock,
+}) => {
   const {
     profiles,
     activeProfileId,
@@ -113,7 +122,7 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
 
         <button
           onClick={onOpenConnectionModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition-colors cursor-pointer shadow-sm shadow-blue-500/20"
+          className="flex min-h-11 items-center gap-1.5 rounded-xl bg-blue-600 px-3 text-xs font-bold text-white transition-colors hover:bg-blue-500 cursor-pointer shadow-sm shadow-blue-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span>Central Plug & Play</span>
@@ -125,7 +134,7 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
         <h2 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
           Aparência do Aplicativo
         </h2>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-2 min-[400px]:grid-cols-3">
           {[
             { id: 'dark', label: 'Escuro (Estúdio)', icon: Moon, desc: 'Ideal para ambientes com pouca luz' },
             { id: 'light', label: 'Claro (Daylight)', icon: Sun, desc: 'Alto contraste para luz do dia' },
@@ -137,7 +146,8 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
               <button
                 key={opt.id}
                 onClick={() => setThemeMode(opt.id as any)}
-                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                aria-pressed={isSelected}
+                className={`min-h-11 rounded-xl border p-3 text-left transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   isSelected
                     ? 'bg-blue-50 dark:bg-white/10 border-blue-500 dark:border-white/20 text-zinc-950 dark:text-white ring-1 ring-blue-500/30'
                     : 'bg-zinc-50 dark:bg-black/30 border-zinc-200 dark:border-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/10'
@@ -155,6 +165,33 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
         </div>
       </div>
 
+      {isWakeLockSupported && (
+        <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-xs dark:border-white/[0.06] dark:bg-white/[0.02] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <Monitor className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
+            <div>
+              <h2 className="text-xs font-bold text-zinc-900 dark:text-white">Tela durante a transmissão</h2>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                Evite que a tela apague enquanto o DeckStream estiver em uso.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onToggleWakeLock}
+            aria-pressed={isWakeLockActive}
+            className={`flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border px-3 text-xs font-semibold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              isWakeLockActive
+                ? 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300'
+                : 'border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-white/[0.08] dark:bg-black/30 dark:text-zinc-300 dark:hover:bg-white/[0.06]'
+            }`}
+          >
+            <span className={`h-2 w-2 rounded-full ${isWakeLockActive ? 'bg-amber-500' : 'bg-zinc-400'}`} />
+            {isWakeLockActive ? 'Tela sempre ligada' : 'Manter tela ligada'}
+          </button>
+        </div>
+      )}
+
       {/* MULTI-PROFILE MANAGER */}
       <div className="p-4 rounded-xl bg-white dark:bg-white/[0.02] border border-zinc-200 dark:border-white/[0.06] shadow-xs space-y-3">
         <div className="flex items-center justify-between">
@@ -171,11 +208,11 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
             value={newProfileName}
             onChange={e => setNewProfileName(e.target.value)}
             placeholder="Novo perfil (ex: Podcast, Música, Edição)..."
-            className="flex-1 px-3 py-1.5 text-xs bg-zinc-100 dark:bg-black/40 border border-zinc-300 dark:border-white/10 rounded-lg text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500"
+            className="min-h-11 flex-1 px-3 text-xs bg-zinc-100 dark:bg-black/40 border border-zinc-300 dark:border-white/10 rounded-lg text-zinc-900 dark:text-white focus:outline-none focus:border-blue-500"
           />
           <button
             onClick={handleCreateProfile}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white transition-colors flex items-center gap-1 cursor-pointer"
+            className="min-h-11 rounded-lg px-3 text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white transition-colors flex items-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Criar Perfil</span>
@@ -195,9 +232,11 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
                     : 'bg-zinc-50 dark:bg-black/30 border-zinc-200 dark:border-white/[0.04] text-zinc-700 dark:text-zinc-300'
                 }`}
               >
-                <div
+                <button
+                  type="button"
                   onClick={() => switchProfile(prof.id)}
-                  className="flex items-center gap-2 min-w-0 cursor-pointer flex-1"
+                  aria-pressed={isActive}
+                  className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-lg text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
                   <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-purple-500 animate-pulse' : 'bg-zinc-400'}`} />
                   <div className="min-w-0">
@@ -206,12 +245,12 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
                       {prof.gridConfig.rows}x{prof.gridConfig.cols} · {prof.buttons.length} botões
                     </span>
                   </div>
-                </div>
+                </button>
 
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => duplicateProfile(prof.id)}
-                    className="p-1 rounded text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                     title="Duplicar Perfil"
                   >
                     <Copy className="w-3.5 h-3.5" />
@@ -220,7 +259,7 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
                   {profiles.length > 1 && (
                     <button
                       onClick={() => deleteProfile(prof.id)}
-                      className="p-1 rounded text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      className="flex h-11 w-11 items-center justify-center rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                       title="Excluir Perfil"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -279,7 +318,7 @@ export const GridConfigView: React.FC<GridConfigViewProps> = ({ onOpenConnection
               <button
                 key={p.label}
                 onClick={() => setGridDimensions(p.rows, p.cols)}
-                className={`px-3 py-1 rounded-md text-xs font-mono font-medium transition-colors cursor-pointer ${
+                className={`min-h-11 min-w-11 rounded-md px-3 text-xs font-mono font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   gridConfig.rows === p.rows && gridConfig.cols === p.cols
                     ? 'bg-blue-600 text-white'
                     : 'bg-zinc-100 dark:bg-white/[0.03] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
